@@ -1,0 +1,23 @@
+{
+  "name": "wasi-runner",
+  "version": "1.0.0",
+  "description": "WASI Runner",
+  "main": "index.js",
+  "scripts": {
+    "build": "bash build.sh",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oasislabs/wasi-runner.git"
+  },
+  "keywords": [
+    "wasi"
+  ],
+  "author": "Oasis Labs <info@oasislabs.com>",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/oasislabs/wasi-runner/issues"
+  },
+  "homepage": "https://github.com/oasislabs/wasi-runner#readme"
+}
