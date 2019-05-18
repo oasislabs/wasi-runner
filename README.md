@@ -8,7 +8,7 @@ WASM code. A modification of the [js-polyfill](https://wasi.dev/polyfill/) for e
 ```
 const runner = require('wasi-runner');
 let stdin = 'hello world';
-let exitCode = await runner.instantiate(fs.readFileSync('my.wasi'), {
+let exitCode = await runner.instantiate(fs.readFileSync('my_wasi.wasm'), {
   stdin,
   stdout = (val) => {
     console.log(val);
