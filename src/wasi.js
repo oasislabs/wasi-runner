@@ -503,14 +503,14 @@ Module['instantiateWasi'] = function (buffer, imports) {
             imports,
         };
         Module['currentWasiDone'] = resolve;
-        Module['_handleFiles']();
+        Module['_handleRun']();
     });
 };
 
 
 function input_callback() {
-    const stdin = Module['currentWasi'].imports.stdin;
-    if (stdin) {
+    let stdin = Module['currentWasi'].imports.stdin;
+    if (!stdin) {
         return null;
     }
     if (typeof stdin.next !== 'function'
@@ -525,28 +525,24 @@ function input_callback() {
     if (val.done) {
         return null;
     }
-    if (typeof val === 'string') {
-        return val.charCodeAt(0);
+    if (typeof val.value === 'string') {
+        return val.value.charCodeAt(0);
+    } else if (typeof val.value !== 'undefined') {
+        return val.value;
     } else {
         return val;
     }
 }
 
 function output_callback(char) {
-    const jschar = String.fromCharCode(char);
     if (typeof Module['currentWasi'].imports.stdout === 'function') {
-        Module['currentWasi'].imports.stdout(jschar);
-    } else {
-        console.log(jschar);
+        Module['currentWasi'].imports.stdout(char);
     }
 }
 
-function err_callback(_char) {
-    const jschar = String.fromCharCode(char);
+function err_callback(char) {
     if (typeof Module['currentWasi'].imports.stderr === 'function') {
-        Module['currentWasi'].imports.stderr(jschar);
-    } else {
-        console.error(jschar);
+        Module['currentWasi'].imports.stderr(char);
     }
 }
 

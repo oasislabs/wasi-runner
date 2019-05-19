@@ -8,7 +8,7 @@ int main(int argc, char *argv[]) {
     return 0;
 }
 
-void handleFiles(void) {
+void handleRun(void) {
     struct fd_table *curfds = &curfds_pointee;
 
     fd_table_init(curfds);
@@ -36,8 +36,8 @@ void handleFiles(void) {
         }) \
         .then(res => { \
             Module['currentWasiDone'](res); \
-        }, error => { \
-            Module['currentWasiDone'](error); \
+        }, err => { \
+            Module['currentWasiDone'](err); \
         }); \
     ");
 }
