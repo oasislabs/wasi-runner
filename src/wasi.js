@@ -502,7 +502,12 @@ Module['instantiateWasi'] = function (buffer, imports) {
             buffer,
             imports,
         };
-        Module['currentWasiDone'] = resolve;
+        Module['currentWasiDone'] = (ret) => {
+            Module['currentWasi'].imports.stdout(null);
+            Module['currentWasi'].imports.stderr(null);
+            delete Module['currentWasi'];
+            resolve(ret);
+        };
         Module['_handleRun']();
     });
 };
