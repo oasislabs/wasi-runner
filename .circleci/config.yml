@@ -22,4 +22,3 @@ jobs:
             ./emsdk install latest
             ./emsdk activate latest
       - run: source ./emsdk/emsdk_env.sh && npm run build
-      
