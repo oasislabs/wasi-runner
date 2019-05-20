@@ -12,7 +12,7 @@ exports.instantiate = async function instantiate(buffer, imports) {
   let ret = {};
   if (!imports.stdout) {
     ret.stdout = new Readable({});
-    ret.stdout._read = () => { };
+    ret.stdout._read = () => {};
     imports.stdout = (val) => {
       if (val !== null) {
         ret.stdout.push(new Uint8Array([val]));
