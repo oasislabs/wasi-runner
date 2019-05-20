@@ -14,22 +14,14 @@ exports.instantiate = async function instantiate(buffer, imports) {
     ret.stdout = new Readable({});
     ret.stdout._read = () => {};
     imports.stdout = (val) => {
-      if (val !== null) {
-        ret.stdout.push(new Uint8Array([val]));
-      } else {
-        ret.stdout.push(null);
-      }
+      ret.stdout.push(val === null ? null : new Uint8Array([val]));
     }
   }
   if (!imports.stderr) {
     ret.stderr = new Readable({});
-    ret.stderr._read = () => { };
+    ret.stderr._read = () => {};
     imports.stderr = (val) => {
-      if (val !== null) {
-        ret.stderr.push(new Uint8Array([val]));
-      } else {
-        ret.stderr.push(null);
-      }
+      ret.stderr.push(val === null ? null : new Uint8Array([val]));
     }
   }
 
