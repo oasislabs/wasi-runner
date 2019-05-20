@@ -1,0 +1,24 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/node:stretch
+    steps:
+      - checkout
+      - restore_cache:
+          key: v1-npm-{{checksum "package-lock.json" }}
+      - run:
+          name: install dependencies
+          command: npm install
+      - save_cache:
+          key: v1-npm-{{ checksum "package-lock.json" }}
+          paths:
+            - node_modules
+      - run:
+          name: Configure Emscripten
+          command: |
+            git clone https://github.com/emscripten-core/emsdk.git
+            cd emsdk
+            ./emsdk install latest
+            ./emsdk activate latest
+      - run: source ./emsdk/emsdk_env.sh && npm run build
