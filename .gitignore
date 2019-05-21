@@ -1,3 +1,4 @@
 /polyfill.js
 /polyfill.wasm
+/dist
 node_modules

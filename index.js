@@ -6,25 +6,27 @@ const ready = new Promise((resolve) => {
   runner.onRuntimeInitialized = resolve;
 });
 
-exports.instantiate = async function instantiate(buffer, imports) {
-  await ready;
+module.exports = {
+  instantiate: async function instantiate(buffer, imports) {
+    await ready;
 
-  let ret = {};
-  if (!imports.stdout) {
-    ret.stdout = new Readable({});
-    ret.stdout._read = () => {};
-    imports.stdout = (val) => {
-      ret.stdout.push(val === null ? null : new Uint8Array([val]));
+    let ret = {};
+    if (!imports.stdout) {
+      ret.stdout = new Readable({});
+      ret.stdout._read = () => {};
+      imports.stdout = (val) => {
+        ret.stdout.push(val === null ? null : new Uint8Array([val]));
+      }
     }
-  }
-  if (!imports.stderr) {
-    ret.stderr = new Readable({});
-    ret.stderr._read = () => {};
-    imports.stderr = (val) => {
-      ret.stderr.push(val === null ? null : new Uint8Array([val]));
+    if (!imports.stderr) {
+      ret.stderr = new Readable({});
+      ret.stderr._read = () => {};
+      imports.stderr = (val) => {
+        ret.stderr.push(val === null ? null : new Uint8Array([val]));
+      }
     }
-  }
 
-  ret.instance = runner.instantiateWasi(buffer, imports);
-  return ret;
+    ret.instance = runner.instantiateWasi(buffer, imports);
+    return ret;
+  },
 };
