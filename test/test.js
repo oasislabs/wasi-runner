@@ -32,7 +32,11 @@ describe('Runner', () => {
       let resp = await fetch('rot13.wasm');
       buf = await resp.arrayBuffer();
     }
-    let prom = runner.instantiate(buf, { stdin: 'hello world' });
+    let prom = runner.instantiate(buf,
+      {
+        stdin: 'hello world',
+        sourceURL: 'rot13.wasm',
+      });
     return prom.then(async (r) => {
       const output = await getStream(r.stdout);
       assert.equal(output, 'uryyb jbeyq');
