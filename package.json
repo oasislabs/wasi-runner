@@ -25,6 +25,7 @@
     "cross-fetch": "^3.0.2",
     "get-stream": "^5.1.0",
     "mocha": "^6.1.4",
+    "wasm-sourcemap": "^1.0.0",
     "webpack": "^4.32.0",
     "webpack-cli": "^3.3.2"
   }
