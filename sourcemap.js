@@ -1,5 +1,7 @@
 const url = require('url');
 
+const section = 'sourceMappingURL';
+
 // read a variable uint encoding from the buffer stream.
 // return the int, and the next position in the stream.
 function read_uint(buf, pos) {
@@ -35,10 +37,26 @@ function ab2str(buf) {
   return str;
 };
 
+function str2ab(str) {
+  let bytes = new Uint8Array(str.length);
+  for (let i = 0; i < str.length; i++) {
+    bytes[i] = str[i].charCodeAt(0);
+  }
+  return bytes;
+};
+
 module.exports = {
+  GetSourceMapURL: function (buf) {
+    buf = new Uint8Array(buf);
+    const uri_start = module.exports.FindSection(buf, section);
+    if (uri_start == -1) {
+      return null;
+    }
+    const [uri_len, uri_pos] = read_uint(buf, uri_start);
+    return ab2str(buf.slice(uri_pos, uri_pos + uri_len));
+  },
   MakeAbsolute: function (buf, wasmURL) {
     buf = new Uint8Array(buf);
-    const section = 'sourceMappingURL';
     const uri_start = module.exports.FindSection(buf, section);
     if (uri_start == -1) {
       return buf;
@@ -46,7 +64,6 @@ module.exports = {
     const [uri_len, uri_pos] = read_uint(buf, uri_start);
     const uri = ab2str(buf.slice(uri_pos, uri_pos + uri_len));
     const new_uri = url.resolve(wasmURL, uri);
-    console.log(new_uri);
     if (uri == new_uri) {
       return buf
     }
@@ -62,9 +79,11 @@ module.exports = {
     return outBuffer;
   },
   WriteSection: function (name, value) {
-    const nameLen = encode_uint(name.length);
-    const valLen = encode_uint(value.length);
-    const sectionLen = nameLen.length + name.length + valLen.length + value.length;
+    const nameBuf = str2ab(name);
+    const valBuf = str2ab(value);
+    const nameLen = encode_uint(nameBuf.length);
+    const valLen = encode_uint(valBuf.length);
+    const sectionLen = nameLen.length + nameBuf.length + valLen.length + valBuf.length;
     const headerLen = encode_uint(sectionLen);
     let bytes = new Uint8Array(sectionLen + headerLen.length + 1);
     let pos = 1;
@@ -72,12 +91,12 @@ module.exports = {
     pos += headerLen.length;
     bytes.set(nameLen, pos);
     pos += nameLen.length;
-    bytes.set(name, pos);
-    pos += name.length;
+    bytes.set(nameBuf, pos);
+    pos += nameBuf.length;
     const val_start = pos;
     bytes.set(valLen, pos);
     pos += valLen.length;
-    bytes.set(value, pos)
+    bytes.set(valBuf, pos)
     return [bytes, val_start];
   },
   FindSection: function (buf, id) {
