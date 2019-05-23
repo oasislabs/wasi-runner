@@ -1,5 +1,5 @@
 const runner = require('./polyfill.js');
-const { MakeAbsolute } = require('./sourcemap.js');
+const { SetSourceMapURLRelativeTo } = require('wasm-sourcemap');
 const { Readable } = require('stream');
 const url = require('url');
 
@@ -18,7 +18,7 @@ module.exports = {
       } else {
         options.sourceURL = url.resolve(__dirname, options.sourceURL);
       }
-      buffer = MakeAbsolute(buffer, options.sourceURL);
+      buffer = SetSourceMapURLRelativeTo(buffer, options.sourceURL);
     }
 
     let ret = {};
