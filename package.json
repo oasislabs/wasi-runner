@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/oasislabs/wasi-runner#readme",
   "devDependencies": {
-    "cross-fetch": "^3.0.2",
+    "cross-fetch": "^3.1.5",
     "get-stream": "^5.1.0",
     "mocha": "^6.1.4",
     "wasm-sourcemap": "^1.0.0",
